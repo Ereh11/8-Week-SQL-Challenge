@@ -11,4 +11,4 @@ Each case-study folder contains:
 - Solutions are coded in **POSTGRESQL**
 
 ## Challenge Case Studies:
-* 🍜[Case Study #1 - Danny's Diner]([https://github.com/Ereh11/8-Week-SQL-Challenge/tree/main/Case%20Study%20%231%20-%20Danny's%20Dinerr](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/README.MD)https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/README.MD)
+* 🍜[Case Study #1 - Danny's Diner](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/README.MD)
