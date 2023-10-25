@@ -278,26 +278,41 @@ ORDER BY customer_id;
 | B           | 940 |
 | C           | 360 |
 
-- Total points for Customer A is 860 point.
-- Total points for Customer B is 940 point.
-- Total points for Customer C is 360 point.
+- Total points for Customer A is 860 points.
+- Total points for Customer B is 940 points.
+- Total points for Customer C is 360 points.
 
 ***
 
-**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi — how many points do customer A and B have at the end of January?**
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi — how many points do customers A and B have at the end of January?**
 
 ```sql
+SELECT mb.customer_id,
+	   SUM(
+         	CASE WHEN s.order_date BETWEEN join_date AND join_date + INTERVAL '6 days' THEN price * 20
+         	WHEN product_name = 'sushi' THEN price * 20
+         	ELSE price * 10 END
+       	  ) AS Total_Points
+       
+FROM dannys_diner.sales AS s
+INNER JOIN dannys_diner.menu AS m
+ON s.product_id = m.product_id
+INNER JOIN dannys_diner.members AS mb
+ON s.customer_id = mb.customer_id
+WHERE LEFT(CAST(order_date AS VARCHAR), 7) = '2021-01'
 
+GROUP BY mb.customer_id
+ORDER BY mb.customer_id;
 
 ```
 
 #### Answer:
 | customer_id | total_points | 
 | ----------- | ---------- |
-| A           | 1020 |
-| B           | 320 |
+| A           | 1370 |
+| B           | 820 |
 
-- Total points for Customer A is 1,020.
-- Total points for Customer B is 320.
+- Total points for Customer A is 1370 points.
+- Total points for Customer B is 820 points.
 
 ***
