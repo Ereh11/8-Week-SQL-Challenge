@@ -359,3 +359,53 @@ ORDER BY mb.customer_id, s.order_date, m.product_name;
 | C           | 2021-01-07 | ramen        | 12    | N      |
 
 ***
+**Rank All The Things**
+
+**Danny also requires further information about the ```ranking``` of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ```ranking``` values for the records when customers are not yet part of the loyalty program.**
+
+```sql
+WITH Add_Ranking AS
+(
+  SELECT s.customer_id,
+         s.order_date,
+         m.product_name,
+         m.price,
+         CASE
+              WHEN mb.join_date <= s.order_date THEN 'Y'
+              ELSE 'N' 
+         END AS member
+  FROM dannys_diner.sales AS s
+  LEFT JOIN dannys_diner.members AS mb
+  ON mb.customer_id = s.customer_id
+  INNER JOIN dannys_diner.menu AS m
+  ON s.product_id = m.product_id
+  ORDER BY mb.customer_id, s.order_date, m.product_name
+ )
+ 
+ SELECT *,
+        CASE 
+        	WHEN member = 'N' THEN null
+            ELSE  DENSE_RANK() OVER(PARTITION BY customer_id, member ORDER BY order_date)
+        END AS ranking
+ FROM Add_Ranking
+```
+#### Answer:
+| customer_id | order_date               | product_name | price | member | ranking |
+| ----------- | ------------------------ | ------------ | ----- | ------ | ------- |
+| A           | 2021-01-01T00:00:00.000Z | curry        | 15    | N      |  null   |
+| A           | 2021-01-01T00:00:00.000Z | sushi        | 10    | N      |  null   |
+| A           | 2021-01-07T00:00:00.000Z | curry        | 15    | Y      | 1       |
+| A           | 2021-01-10T00:00:00.000Z | ramen        | 12    | Y      | 2       |
+| A           | 2021-01-11T00:00:00.000Z | ramen        | 12    | Y      | 3       |
+| A           | 2021-01-11T00:00:00.000Z | ramen        | 12    | Y      | 3       |
+| B           | 2021-01-01T00:00:00.000Z | curry        | 15    | N      |  null   |
+| B           | 2021-01-02T00:00:00.000Z | curry        | 15    | N      |  null   |
+| B           | 2021-01-04T00:00:00.000Z | sushi        | 10    | N      |  null   |
+| B           | 2021-01-11T00:00:00.000Z | sushi        | 10    | Y      | 1       |
+| B           | 2021-01-16T00:00:00.000Z | ramen        | 12    | Y      | 2       |
+| B           | 2021-02-01T00:00:00.000Z | ramen        | 12    | Y      | 3       |
+| C           | 2021-01-01T00:00:00.000Z | ramen        | 12    | N      |  null   |
+| C           | 2021-01-01T00:00:00.000Z | ramen        | 12    | N      |  null   |
+| C           | 2021-01-07T00:00:00.000Z | ramen        | 12    | N      |  null   |
+
+***
