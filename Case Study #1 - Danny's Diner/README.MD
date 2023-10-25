@@ -25,7 +25,7 @@ Danny wants to use the data to answer a few simple questions about his customers
 
 ````sql
 SELECT
-  	customer_id,
+      customer_id,
       SUM(price) AS Total_Spent
 FROM dannys_diner.menu
 INNER JOIN dannys_diner.sales
@@ -50,7 +50,7 @@ ORDER BY customer_id;
 
 ````sql
 SELECT
-	  customer_id,
+	customer_id,
   	COUNT(DISTINCT order_date) AS Number_visited
 FROM  dannys_diner.sales
 GROUP BY customer_id;
@@ -105,7 +105,7 @@ GROUP BY customer_id, product_name
 
 ````sql
 SELECT  product_name,
-		COUNT(product_id) AS Number_OF_Purchases
+        COUNT(product_id) AS Number_OF_Purchases
 FROM dannys_diner.menu AS m
 INNER JOIN dannys_diner.sales AS s
 USING(product_id)
@@ -142,7 +142,7 @@ WITH Ranked_Popular_Item AS
 
 
 SELECT customer_id,
-	   product_name,
+       product_name,
        Number_OF_Purchase
 
 FROM Ranked_Popular_Item
@@ -169,8 +169,8 @@ WHERE Rank = 1;
 WITH First_Item AS
 (
   SELECT  m.product_name,
-  		  mb.customer_id,
-		 DENSE_RANK() OVER(PARTITION BY mb.customer_id ORDER BY order_date) AS Rank
+  	  mb.customer_id,
+	  DENSE_RANK() OVER(PARTITION BY mb.customer_id ORDER BY order_date) AS Rank
   
   FROM dannys_diner.members AS mb
   INNER JOIN dannys_diner.sales AS s
@@ -202,8 +202,8 @@ WHERE Rank = 1;
 WITH First_Item_Before_Join AS
 (
   SELECT  m.product_name,
-  		  mb.customer_id,
-		 DENSE_RANK() OVER(PARTITION BY mb.customer_id ORDER BY order_date DESC) AS Rank
+  	  mb.customer_id,
+	  DENSE_RANK() OVER(PARTITION BY mb.customer_id ORDER BY order_date DESC) AS Rank
   
   FROM dannys_diner.members AS mb
   INNER JOIN dannys_diner.sales AS s
@@ -214,7 +214,7 @@ WITH First_Item_Before_Join AS
 )
 
 SELECT  customer_id,
-		product_name
+	product_name
 FROM First_Item_Before_Join
 WHERE Rank = 1;
 ````
@@ -234,8 +234,8 @@ WHERE Rank = 1;
 
 ```sql
 SELECT  mb.customer_id,
-		COUNT(s.product_id) AS Total_items,
-  	  SUM(m.price) AS Amount_Spent
+	COUNT(s.product_id) AS Total_items,
+  	SUM(m.price) AS Amount_Spent
 FROM dannys_diner.members AS mb
 INNER JOIN dannys_diner.sales AS s
 ON mb.customer_id = s.customer_id AND s.order_date < mb.join_date
@@ -260,7 +260,7 @@ Before becoming members,
 
 ```sql
 SELECT customer_id,
-	   SUM(
+	SUM(
          	CASE WHEN product_name = 'sushi' THEN price * 20
          	ELSE price * 10 END
        	  ) AS Total_Points
@@ -288,7 +288,7 @@ ORDER BY customer_id;
 
 ```sql
 SELECT mb.customer_id,
-	   SUM(
+	SUM(
          	CASE WHEN s.order_date BETWEEN join_date AND join_date + INTERVAL '6 days' THEN price * 20
          	WHEN product_name = 'sushi' THEN price * 20
          	ELSE price * 10 END
@@ -314,5 +314,48 @@ ORDER BY mb.customer_id;
 
 - Total points for Customer A is 1370 points.
 - Total points for Customer B is 820 points.
+
+***
+## BONUS QUESTIONS
+
+**Join All The Things**
+
+**Recreate the table with: customer_id, order_date, product_name, price, member (Y/N)**
+
+```sql
+SELECT s.customer_id,
+	   s.order_date,
+	   m.product_name,
+       m.price,
+       CASE
+       		WHEN mb.join_date <= s.order_date THEN 'Y'
+    		ELSE 'N' 
+       END AS member
+FROM dannys_diner.sales AS s
+LEFT JOIN dannys_diner.members AS mb
+ON mb.customer_id = s.customer_id
+INNER JOIN dannys_diner.menu AS m
+ON s.product_id = m.product_id
+ORDER BY mb.customer_id, s.order_date, m.product_name;
+```
+ 
+#### Answer: 
+| customer_id | order_date | product_name | price | member |
+| ----------- | ---------- | -------------| ----- | ------ |
+| A           | 2021-01-01 | sushi        | 10    | N      |
+| A           | 2021-01-01 | curry        | 15    | N      |
+| A           | 2021-01-07 | curry        | 15    | Y      |
+| A           | 2021-01-10 | ramen        | 12    | Y      |
+| A           | 2021-01-11 | ramen        | 12    | Y      |
+| A           | 2021-01-11 | ramen        | 12    | Y      |
+| B           | 2021-01-01 | curry        | 15    | N      |
+| B           | 2021-01-02 | curry        | 15    | N      |
+| B           | 2021-01-04 | sushi        | 10    | N      |
+| B           | 2021-01-11 | sushi        | 10    | Y      |
+| B           | 2021-01-16 | ramen        | 12    | Y      |
+| B           | 2021-02-01 | ramen        | 12    | Y      |
+| C           | 2021-01-01 | ramen        | 12    | N      |
+| C           | 2021-01-01 | ramen        | 12    | N      |
+| C           | 2021-01-07 | ramen        | 12    | N      |
 
 ***
