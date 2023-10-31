@@ -1,4 +1,25 @@
-# 🍕 Case Study #2 - Pizza Runner
+# 🍕 Case Study #2 Pizza Runner
+
+<img src="https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Resources/case2pic.png" alt="Image" width="500" height="520">
+
+## 📚 Table of Contents
+- [Business Task](#business-task)
+- [Entity Relationship Diagram](#entity-relationship-diagram)
+- Solution
+  - [Data Cleaning and Transformation](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/Data%20Cleaning%20&%20Transformation.md)
+  - [A. Pizza Metrics](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/A.%20Pizza%20Metrics.md)
+  - [B. Runner and Customer Experience]()
+  - [C. Ingredient Optimisation]()
+  - [D. Pricing and Ratings]()
+***
+
+## Business Task
+Danny is expanding his new Pizza Empire and at the same time, he wants to Uberize it, so Pizza Runner was launched!
+
+Danny started by recruiting “runners” to deliver fresh pizza from Pizza Runner Headquarters (otherwise known as Danny’s house) and also maxed out his credit card to pay freelance developers to build a mobile app to accept orders from customers. 
+
+## Entity Relationship Diagram
+![Pizza Runner](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Resources/case2relationship.png)
 
 ## 🔧 Data Cleaning & Transformation
 
