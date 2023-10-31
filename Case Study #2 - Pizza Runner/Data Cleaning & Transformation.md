@@ -127,9 +127,9 @@ Then, we alter the `pickup_time`, `distance` and `duration` columns to the corre
 
 ````sql
 ALTER TABLE runner_orders_temp
-ALTER COLUMN pickup_time DATETIME,
-ALTER COLUMN distance FLOAT,
-ALTER COLUMN duration INT;
+ALTER COLUMN pickup_time TYPE TIMESTAMP USING(CAST(pickup_time AS TIMESTAMP)),
+ALTER COLUMN distance TYPE FLOAT USING(CAST(distance AS FLOAT)),
+ALTER COLUMN duration TYPE INT USING(CAST(duration AS INT));
 ````
 
 This is how the clean `runner_orders_temp` table looks like after cleaning.
