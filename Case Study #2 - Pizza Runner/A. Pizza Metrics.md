@@ -109,3 +109,127 @@ ORDER BY customer_id;
 - Customer 103 ordered 3 Meatlovers pizzas and 1 Vegetarian pizza.
 - Customer 104 ordered 1 Meatlovers pizza.
 - Customer 105 ordered 1 Vegetarian pizza.
+
+
+
+### 6. What was the maximum number of pizzas delivered in a single order?
+
+````sql
+SELECT MAX(Number_Ordered_Pizza) AS Max_Pizza_delivered
+FROM
+(
+  SELECT order_id,
+         COUNT(pizza_id) AS Number_Ordered_Pizza
+  FROM customer_orders_temp
+  INNER JOIN runner_orders_temp
+  USING(order_id)
+  WHERE distance IS NOT NULL AND distance != 0
+  GROUP BY order_id
+) AS TP;
+````
+
+**Answer:**
+
+| max_pizza_delivered |
+| ------------------- |
+| 3                   |
+
+- Maximum number of pizza delivered in a single order is 3 pizzas.
+
+### 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+
+````sql
+SELECT customer_id,
+	   SUM(
+           CASE WHEN exclusions IS NOT NULL OR extras IS NOT NULL THEN 1
+           ELSE 0 END
+           ) AS Number_Changeed_Pizza,
+           
+       SUM(
+           CASE WHEN exclusions IS NULL AND extras IS NULL THEN 1
+           ELSE 0 END 
+           )AS Number_No_Changeed_Pizza 
+       
+FROM customer_orders_temp
+INNER JOIN runner_orders_temp
+USING(order_id)
+WHERE distance IS NOT NULL AND distance != 0
+GROUP BY customer_id;
+````
+
+**Answer:**
+
+| customer_id | number_changeed_pizza | number_no_changeed_pizza |
+| ----------- | --------------------- | ------------------------ |
+| 101         | 0                     | 2                        |
+| 103         | 3                     | 0                        |
+| 104         | 2                     | 1                        |
+| 105         | 1                     | 0                        |
+| 102         | 0                     | 3                        |
+
+- Customer 101 and 102 have no changes.
+- Customer 103, 104 and 105 requested at least 1 change (extra or exclusion topping) on their pizza.
+
+### 8. How many pizzas were delivered that had both exclusions and extras?
+
+````sql
+SELECT COUNT(pizza_id) AS Delivered_Pizza_With_Exclu_And_Extras
+FROM customer_orders_temp
+INNER JOIN runner_orders_temp
+USING(order_id)
+WHERE (distance IS NOT NULL AND distance != 0)
+	  AND exclusions IS NOT NULL AND extras IS NOT NULL;
+````
+
+**Answer:**
+
+| delivered_pizza_with_exclu_and_extras |
+| ------------------------------------- |
+| 1                                     |
+
+- Only 1 pizza delivered that had both extras and exclusion.
+
+### 9. What was the total volume of pizzas ordered for each hour of the day?
+
+````sql
+SELECT DATE_PART('HOUR', order_time) AS Hour,
+	   COUNT(pizza_id) AS Total_Ordered_Pizza
+FROM customer_orders_temp
+GROUP BY DATE_PART('HOUR', order_time)
+ORDER BY Hour;
+````
+
+**Answer:**
+
+| hour | total_ordered_pizza |
+| ---- | ------------------- |
+| 11   | 1                   |
+| 13   | 3                   |
+| 18   | 3                   |
+| 19   | 1                   |
+| 21   | 3                   |
+| 23   | 3                   |
+
+### 10. What was the volume of orders for each day of the week?
+
+````sql
+SELECT TO_CHAR(order_time, 'Day') AS Day,
+	   COUNT(order_id) AS Total_Orders
+FROM customer_orders_temp
+GROUP BY TO_CHAR(order_time, 'Day');
+````
+
+**Answer:**
+
+| day       | total_orders |
+| --------- | ------------ |
+| Saturday  | 5            |
+| Thursday  | 3            |
+| Friday    | 1            |
+| Wednesday | 5            |
+
+- There are 5 pizzas ordered on Wednesday and Saturday.
+- There are 3 pizzas ordered on Thursday.
+- There is 1 pizza ordered on Friday.
+
+***
