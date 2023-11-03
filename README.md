@@ -13,3 +13,5 @@ Each case-study folder contains:
 ## Challenge Case Studies:
 * 🍜[Case Study #1 - Danny's Diner](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/README.MD)
 * 🍕[Case Study #2 - Pizza Runner](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/README.MD)
+* 🥑[Case Study #3 - Foodie-Fi](https://github.com/Ereh11/8-Week-SQL-Challenge/blob/main/Case%20Study%20%233%20-%20Foodie-Fi/README.md)
+ 
